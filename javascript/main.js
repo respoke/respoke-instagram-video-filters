@@ -3,7 +3,7 @@ var room = url.room;
 
 if(typeof room === "undefined" || room === null) {
 	room = chance.hammertime();
-	location.href = location.origin + "?room=" + room;
+	location.href = location.href + "?room=" + room;
 }
 
 // Get the localVideo and remoteVideo elements
@@ -41,7 +41,7 @@ client.listen("connect", function(e) {
 					if(connections.length > 2) {
 						console.log("connections.length > 2");
 						
-						var url = location.origin + "?room=" + chance.hammertime();
+						var url = location.href.replace(/(room=)[^\&]+/, '$1' + chance.hammertime());
 						var message = "Sorry, that room is full. Share this URL to video chat: ";
 						
 						document.getElementById("altMessage").innerHTML = message;
