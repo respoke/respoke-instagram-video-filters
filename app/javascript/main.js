@@ -19,31 +19,31 @@ var client = new respoke.createClient({
 // Setup some Respoke event handlers
 client.listen("connect", function(e) {
 	console.log("client.listen#connect", e);
-	
+
 	client.join({
 		id: room,
-		
+
 		onSuccess: function(group) {
 			this.group = group;
-			
+
 			group.listen("join", function(e) {
 				console.log("group.listen#join");
 			});
-			
+
 			group.listen("leave", function(e) {
 				console.log("group.listen#leave");
 			});
-			
+
 			group.getMembers({
 				onSuccess: function(connections) {
 					console.log("group.getMembers#onSuccess", connections);
-					
+
 					if(connections.length > 2) {
 						console.log("connections.length > 2");
-						
+
 						var url = location.href.replace(/(room=)[^\&]+/, '$1' + chance.hammertime());
 						var message = "Sorry, that room is full. Share this URL to video chat: ";
-						
+
 						document.getElementById("altMessage").innerHTML = message;
 						document.getElementById("altUrl").innerHTML = url;
 					} else {
@@ -65,16 +65,16 @@ client.listen("disconnect", function(e) {
 
 client.listen("call", function(e) {
 	console.log("client.listen#call", e);
-	
+
 	call = e.call;
-	
+
 	if(call.caller !== true) {
 		call.answer({
 			videoLocalElement: localVideo,
 			videoRemoteElement: remoteVideo
 		});
 	}
-	
+
 	call.listen("hangup", function(e) {
 		console.log("call.listen#hangup", e);
 		call = null;
@@ -107,56 +107,36 @@ function startVideoCall(remoteEndpointId) {
 // Handle messages from remote user to update local user Instagram filter
 function handleMessages(e) {
 	console.log("handleMessages", e);
-	
+
 	var message = e.message.message;
-	
-	setFilter(message);
+
+	setFilter.apply(this, message);
 }
 
-
 // Instagram filter controls
-var ul = document.getElementById("filters"); 
+var ul = document.getElementsByClassName("filters");
 
-ul.addEventListener("click", function(e) {
-  console.log("ul.addEventListener#click: ", e);
-  
-  var filter = e.target.id;
-  
-  setFilter(filter);
-  
-  group.sendMessage({message: filter});
-});
+for(var i=0;i<ul.length;i++){
+	ul[i].addEventListener("click", function(e) {
+	  console.log("ul.addEventListener#click: ", e.target);
 
-function setFilter(filter) {
-	var filters = {
-	  "NoFilter": function() {
-	    console.log("NoFilter", group);
-	    localVideo.className = "";
-		remoteVideo.className = "";
-	  },
+	  var idArray = e.target.id.split("-");
 
-	  "Willow": function() {
-	    console.log("Willow");
-	    localVideo.className = "ig-willow";
-		remoteVideo.className = "ig-willow";
-	  },
+	  setFilter.apply(this, idArray);
 
-	  "Earlybird": function() {
-	    console.log("Earlybird");
-	    localVideo.className = "ig-earlybird";
-		remoteVideo.className = "ig-earlybird";
-	  },
+	  group.sendMessage({message: idArray});
+	});
+}
 
-	  "Mayfair": function() {
-	    console.log("Mayfair");
-	    localVideo.className = "ig-mayfair";
-		remoteVideo.className = "ig-mayfair";
-	  },
+function setFilter(person, filter) {
+	var video = (person === "Me"? localVideo : remoteVideo);
+	var on = document.getElementById(person + "-" + filter);
+	var filterList = on.parentNode.children;
 
-	  "Amaro": function() {
-	    console.log("Amaro");
-	    localVideo.className = "ig-amaro";
-		remoteVideo.className = "ig-amaro";
-	  }
-	}[filter]();
+	for (var i=0;i<filterList.length;i++) {
+		filterList[i].className="";
+	}
+
+	on.className = "on";
+	video.className = "ig-" + filter.toLowerCase();
 }
