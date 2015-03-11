@@ -18,4 +18,4 @@ https://respoke.github.io/respoke-instagram-video-filters/
 - When your friend visit the URL, you'll be prompted for access to your camera and mic*. Click "Accept".
 - Click on a filter link under the video to change the filter for yourself and your friend.
 
-***Note**: When using https you will only be prompted once and your browser will save the setting.
+*Note: When using https you will only be prompted once and your browser will save the setting.
