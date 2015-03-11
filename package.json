@@ -7,14 +7,15 @@
     "start": "gulp"
   },
   "repository": {
-  "type": "git",
-  "url": "https://github.com/respoke/respoke-instagram-video-filters.git"
+    "type": "git",
+    "url": "https://github.com/respoke/respoke-instagram-video-filters.git"
   },
   "author": "The Respoke Team",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.9.2",
-    "express": "^4.10.2"
+    "express": "^4.10.2",
+    "gulp": "^3.8.11"
   },
   "devDependencies": {
     "gulp": "^3.8.10",
