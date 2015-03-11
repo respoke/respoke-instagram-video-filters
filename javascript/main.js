@@ -110,7 +110,7 @@ function handleMessages(e) {
 
 	var message = e.message.message;
 
-	setFilter.apply(this, message);
+	setFilter(message);
 }
 
 // Instagram filter controls
@@ -120,23 +120,26 @@ for(var i=0;i<ul.length;i++){
 	ul[i].addEventListener("click", function(e) {
 	  console.log("ul.addEventListener#click: ", e.target);
 
-	  var idArray = e.target.id.split("-");
+		var filterId = e.target.id;
 
-	  setFilter.apply(this, idArray);
+		setFilter(filterId);
 
-	  group.sendMessage({message: idArray});
+		group.sendMessage({message: filterId});
 	});
 }
 
-function setFilter(person, filter) {
+function setFilter(filterId) {
+	var idArray = filterId.split("-");
+	var person = idArray[0];
+	var filter = idArray[1];
 	var video = (person === "Me"? localVideo : remoteVideo);
-	var on = document.getElementById(person + "-" + filter);
-	var filterList = on.parentNode.children;
+	var onLi = document.getElementById(filterId);
+	var filterList = onLi.parentNode.children;
 
 	for (var i=0;i<filterList.length;i++) {
 		filterList[i].className="";
 	}
 
-	on.className = "on";
+	onLi.className = "on";
 	video.className = "ig-" + filter.toLowerCase();
 }
